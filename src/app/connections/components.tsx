@@ -54,10 +54,7 @@ export function Board({
   reset: () => void;
 }) {
   function handleClick(word: string) {
-    if (selected.length <= 4) {
-      onClick(word);
-    } else {
-    }
+    onClick(word);
   }
 
   return (
