@@ -2,15 +2,20 @@
 
 import { useState } from "react";
 
-export function CheckButton({ selected }: { selected: string[] }) {
-  function handleClick() {
-    isGroup(selected);
-  }
+export const found = [""];
+
+export function CheckButton({
+  selected,
+  onClick,
+}: {
+  selected: string[];
+  onClick: () => void;
+}) {
   return (
     <div className="flex justify-center">
       <button
         className="w-32 bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleClick}
+        onClick={onClick}
       >
         Submit
       </button>
@@ -38,24 +43,6 @@ export function Tile({
   );
 }
 
-// holds the answer keys
-const solution = new Map<string, string>();
-const group1 = ["", "glimmer", "lantern", "pebble", "whistle"];
-solution.set(JSON.stringify(group1), "test");
-
-// checks if its a valid solution
-function isGroup(group: string[]) {
-  console.log();
-  console.log(solution);
-  console.log(group.sort());
-
-  if (solution.has(JSON.stringify(group.sort()))) {
-    console.log("solution!");
-  } else {
-    console.log("not yet");
-  }
-}
-
 export function Board({
   squares,
   selected,
@@ -64,13 +51,11 @@ export function Board({
   squares: string[];
   selected: string[];
   onClick: (word: string) => void;
+  reset: () => void;
 }) {
-  const [clicks, setClicks] = useState(1);
-
   function handleClick(word: string) {
-    if (clicks <= 4) {
+    if (selected.length <= 4) {
       onClick(word);
-      setClicks(clicks + 1);
     } else {
     }
   }
@@ -109,24 +94,96 @@ export function Board({
               />
             </td>
           </tr>
-          {/* <tr>
-            <td>{tile(squares[4], handleClick(4))}</td>
-            <td>{tile(squares[5], handleClick(5))}</td>
-            <td>{tile(squares[6], handleClick(6))} </td>
-            <td>{tile(squares[7], handleClick(7))} </td>
+          <tr>
+            <td>
+              <Tile
+                word={squares[4]}
+                onClick={() => handleClick(squares[4])}
+                isClicked={selected.includes(squares[4])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[5]}
+                onClick={() => handleClick(squares[5])}
+                isClicked={selected.includes(squares[5])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[6]}
+                onClick={() => handleClick(squares[6])}
+                isClicked={selected.includes(squares[6])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[7]}
+                onClick={() => handleClick(squares[7])}
+                isClicked={selected.includes(squares[7])}
+              />
+            </td>
           </tr>
           <tr>
-            <td>{tile(squares[8], handleClick(8))}</td>
-            <td>{tile(squares[9], handleClick(9))}</td>
-            <td>{tile(squares[10], handleClick(10))} </td>
-            <td>{tile(squares[11], handleClick(11))} </td>
+            <td>
+              <Tile
+                word={squares[8]}
+                onClick={() => handleClick(squares[8])}
+                isClicked={selected.includes(squares[8])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[9]}
+                onClick={() => handleClick(squares[9])}
+                isClicked={selected.includes(squares[9])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[10]}
+                onClick={() => handleClick(squares[10])}
+                isClicked={selected.includes(squares[10])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[11]}
+                onClick={() => handleClick(squares[11])}
+                isClicked={selected.includes(squares[11])}
+              />
+            </td>
           </tr>
           <tr>
-            <td>{tile(squares[12], handleClick(12))}</td>
-            <td>{tile(squares[13], handleClick(13))}</td>
-            <td>{tile(squares[14], handleClick(14))} </td>
-            <td>{tile(squares[15], handleClick(15))} </td>
-          </tr> */}
+            <td>
+              <Tile
+                word={squares[12]}
+                onClick={() => handleClick(squares[12])}
+                isClicked={selected.includes(squares[12])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[13]}
+                onClick={() => handleClick(squares[13])}
+                isClicked={selected.includes(squares[13])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[14]}
+                onClick={() => handleClick(squares[14])}
+                isClicked={selected.includes(squares[14])}
+              />
+            </td>
+            <td>
+              <Tile
+                word={squares[15]}
+                onClick={() => handleClick(squares[15])}
+                isClicked={selected.includes(squares[15])}
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
