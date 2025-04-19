@@ -2,36 +2,76 @@
 
 import { useState } from "react";
 
-export function Tile({ word, onClick }: { word: string; onClick: () => void }) {
+export function CheckButton({ selected }: { selected: string[] }) {
+  function handleClick() {
+    isGroup(selected);
+  }
+  return (
+    <div className="flex justify-center">
+      <button
+        className="w-32 bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleClick}
+      >
+        Submit
+      </button>
+    </div>
+  );
+}
+export function Tile({
+  word,
+  onClick,
+  isClicked,
+}: {
+  word: string;
+  onClick: () => void;
+  isClicked: boolean;
+}) {
   return (
     <button
       onClick={onClick}
-      className="w-50 h-50 rounded-lg bg-neutral-200 p-4"
+      className={`w-50 h-50 rounded-lg ${
+        isClicked ? "bg-neutral-600 text-white" : "bg-neutral-200 text-black"
+      } p-4`}
     >
       <p>{word}</p>
     </button>
   );
 }
 
+// holds the answer keys
+const solution = new Map<string, string>();
+const group1 = ["", "glimmer", "lantern", "pebble", "whistle"];
+solution.set(JSON.stringify(group1), "test");
+
+// checks if its a valid solution
 function isGroup(group: string[]) {
-  if (
-    JSON.stringify(group.sort()) == JSON.stringify(["hi", "bye", "hi", "bye"])
-  ) {
+  console.log();
+  console.log(solution);
+  console.log(group.sort());
+
+  if (solution.has(JSON.stringify(group.sort()))) {
+    console.log("solution!");
+  } else {
+    console.log("not yet");
   }
 }
-export function board(squares: string[]) {
-  const [group, setGroup] = useState();
+
+export function Board({
+  squares,
+  selected,
+  onClick,
+}: {
+  squares: string[];
+  selected: string[];
+  onClick: (word: string) => void;
+}) {
   const [clicks, setClicks] = useState(1);
 
-  function handleClick(i: number) {
+  function handleClick(word: string) {
     if (clicks <= 4) {
-      const newGroup = [...group.slice(0, clicks - 1), squares[i]];
-      console.log(newGroup);
-      setGroup(newGroup);
+      onClick(word);
       setClicks(clicks + 1);
-      console.log(group);
     } else {
-      console.log("oops");
     }
   }
 
@@ -41,16 +81,32 @@ export function board(squares: string[]) {
         <tbody>
           <tr>
             <td>
-              <Tile word={squares[0]} onClick={() => handleClick(0)} />
+              <Tile
+                word={squares[0]}
+                onClick={() => handleClick(squares[0])}
+                isClicked={selected.includes(squares[0])}
+              />
             </td>
             <td>
-              <Tile word={squares[1]} onClick={() => handleClick(1)} />
+              <Tile
+                word={squares[1]}
+                onClick={() => handleClick(squares[1])}
+                isClicked={selected.includes(squares[1])}
+              />
             </td>
             <td>
-              <Tile word={squares[2]} onClick={() => handleClick(2)} />{" "}
+              <Tile
+                word={squares[2]}
+                onClick={() => handleClick(squares[2])}
+                isClicked={selected.includes(squares[2])}
+              />
             </td>
             <td>
-              <Tile word={squares[3]} onClick={() => handleClick(3)} />{" "}
+              <Tile
+                word={squares[3]}
+                onClick={() => handleClick(squares[3])}
+                isClicked={selected.includes(squares[3])}
+              />
             </td>
           </tr>
           {/* <tr>
