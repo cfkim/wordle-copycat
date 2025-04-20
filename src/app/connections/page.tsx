@@ -22,26 +22,41 @@ export default function Connections() {
     "thistle",
   ]);
   const [selected, setSelected] = useState([""]);
-  const [wins, setWins] = useState([""]);
   const [found, setFound] = useState([""]);
   const [clicks, setClicks] = useState(1);
   const [solved, setSolved] = useState([""]);
   const [numGroups, setNumGroups] = useState(0);
+  const [mistakesLeft, setMistakesLeft] = useState(4);
 
   function onClick(word: string) {
     if (selected.includes(word)) {
       setSelected(selected.filter((item) => item !== word));
       console.log(selected);
     } else {
-      selected.push(word);
-      setSelected(selected);
-      setClicks(clicks + 1);
+      if (selected.length < 5) {
+        selected.push(word);
+        setSelected(selected);
+        setClicks(clicks + 1);
+      }
     }
   }
 
   function reset() {
     setSelected([""]);
+    setClicks(1);
   }
+
+  function endGame() {
+    window.alert("Game ended!");
+  }
+
+  const answers = found.map((answer, index) => {
+    return (
+      <li key={index}>
+        <AnswerTile categoryName={answer} />
+      </li>
+    );
+  });
 
   // checks if its a valid solution
   function isGroup() {
@@ -57,7 +72,12 @@ export default function Connections() {
       }
       setNumGroups(numGroups + 1);
     } else {
-      window.alert("Try again!");
+      if (mistakesLeft > 1) {
+        setMistakesLeft(mistakesLeft - 1);
+      } else {
+        setMistakesLeft(mistakesLeft - 1);
+        endGame();
+      }
     }
   }
 
@@ -75,7 +95,7 @@ export default function Connections() {
           />
           <CheckButton selected={selected} onClick={isGroup} />
         </div>
-        <p>{found}</p>
+        <div className="flex flex-col list-none">{answers}</div>
       </div>
     </main>
   );

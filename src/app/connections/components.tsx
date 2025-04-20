@@ -6,11 +6,13 @@ export const found = [""];
 const colors = ["bg-yellow-300", "bg-red-300", "bg-teal-300", "bg-purple-300"];
 
 export function AnswerTile({ categoryName }: { categoryName: string }) {
-  return (
-    <div className="w-210 h-50 rounded-lg bg-neutral-600 text-white">
-      {categoryName}
-    </div>
-  );
+  if (categoryName != "") {
+    return (
+      <div className="flex w-210 h-50 rounded-lg bg-neutral-600 text-white justify-center ">
+        <p className="content-center">{categoryName}</p>
+      </div>
+    );
+  }
 }
 export function CheckButton({
   selected,
@@ -22,7 +24,10 @@ export function CheckButton({
   return (
     <div className="flex justify-center">
       <button
-        className="w-32 bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded"
+        className={
+          "w-32 bg-sky-500 enabled:hover:bg-sky-700 text-white font-bold py-2 px-4 rounded disabled:opacity-25"
+        }
+        disabled={selected.length != 5}
         onClick={onClick}
       >
         Submit
@@ -51,7 +56,7 @@ export function Tile({
         isClicked && !solved
           ? "bg-neutral-600 text-white"
           : "bg-neutral-200 text-black"
-      } ${solved ? "cursor-not-allowed opacity-50" : ""} p-4`}
+      } ${solved ? "cursor-not-allowed opacity-20" : ""} p-4`}
       disabled={solved}
     >
       <p>{word}</p>
