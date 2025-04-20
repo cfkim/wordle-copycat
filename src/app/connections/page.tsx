@@ -1,6 +1,12 @@
 "use client";
-import { Board, CheckButton, AnswerTile } from "@/app/connections/components";
-import { useState } from "react";
+import {
+  Board,
+  CheckButton,
+  AnswerTile,
+  Lives,
+} from "@/app/connections/components";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function Connections() {
   const [squares, setSquares] = useState([
@@ -21,13 +27,15 @@ export default function Connections() {
     "murmur",
     "thistle",
   ]);
+
   const [selected, setSelected] = useState([""]);
   const [found, setFound] = useState([""]);
   const [clicks, setClicks] = useState(1);
   const [solved, setSolved] = useState([""]);
   const [numGroups, setNumGroups] = useState(0);
   const [mistakesLeft, setMistakesLeft] = useState(4);
-
+  const [guessed, setGuessed] = useState([""]);
+  const [wrong, setWrong] = useState(false);
   function onClick(word: string) {
     if (selected.includes(word)) {
       setSelected(selected.filter((item) => item !== word));
@@ -46,6 +54,9 @@ export default function Connections() {
     setClicks(1);
   }
 
+  function resetWrong() {
+    setWrong(false);
+  }
   function endGame() {
     window.alert("Game ended!");
   }
@@ -59,7 +70,7 @@ export default function Connections() {
   });
 
   // checks if its a valid solution
-  function isGroup() {
+  async function isGroup() {
     const stringversion = JSON.stringify(selected.sort());
     if (solution.has(stringversion)) {
       found.push(solution.get(stringversion) || "");
@@ -72,17 +83,24 @@ export default function Connections() {
       }
       setNumGroups(numGroups + 1);
     } else {
-      if (mistakesLeft > 1) {
-        setMistakesLeft(mistakesLeft - 1);
+      if (!guessed.includes(stringversion)) {
+        setWrong(true);
+        guessed.push(JSON.stringify(selected.sort()));
+        setGuessed(guessed);
+        if (mistakesLeft > 1) {
+          setMistakesLeft(mistakesLeft - 1);
+        } else {
+          setMistakesLeft(mistakesLeft - 1);
+          endGame();
+        }
       } else {
-        setMistakesLeft(mistakesLeft - 1);
-        endGame();
+        window.alert("you already guessed that");
       }
     }
   }
 
   return (
-    <main className="flex min-h-screen px-50 py-50 text-xl">
+    <main className="flex min-h-screen px-50 py-50 text-2xl font-bold">
       <div className="flex flex-row ">
         <div className="flex justify-center flex-col">
           <Board
@@ -92,7 +110,11 @@ export default function Connections() {
             reset={reset}
             solved={solved}
             numSolved={numGroups}
+            mistakesLeft={mistakesLeft}
+            wrong={wrong}
+            resetWrong={resetWrong}
           />
+          <Lives count={mistakesLeft} />
           <CheckButton selected={selected} onClick={isGroup} />
         </div>
         <div className="flex flex-col list-none">{answers}</div>

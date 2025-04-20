@@ -1,10 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export const found = [""];
 const colors = ["bg-yellow-300", "bg-red-300", "bg-teal-300", "bg-purple-300"];
 
+export function Lives({ count }: { count: number }) {
+  return (
+    <motion.div className="flex justify-center py-7" animate={{}}>
+      <div className="flex flex-row w-2/3 justify-center">
+        Mistakes Remaining:
+        <div className="flex justify-left w-1/5 px-5">
+          {Array.from({ length: count }, (_, index) => (
+            <div className="px-1" key={index}>
+              <div className="w-6 h-6 bg-neutral-600 rounded-full"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 export function AnswerTile({ categoryName }: { categoryName: string }) {
   if (categoryName != "") {
     return (
@@ -42,25 +59,39 @@ export function Tile({
   isClicked,
   solved,
   numSolved,
+  mistakesLeft,
+  wrong,
+  resetWrong,
 }: {
   word: string;
   onClick: () => void;
   isClicked: boolean;
   solved: boolean;
   numSolved: number;
+  mistakesLeft: number;
+  wrong: boolean;
+  resetWrong: () => void;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-50 h-50 rounded-lg ${
-        isClicked && !solved
-          ? "bg-neutral-600 text-white"
-          : "bg-neutral-200 text-black"
-      } ${solved ? "cursor-not-allowed opacity-20" : ""} p-4`}
-      disabled={solved}
+    <motion.div
+      animate={wrong && isClicked ? { x: [-30, 30, -10, 10, 0] } : ""}
+      transition={{ duration: 0.7 }}
+      onAnimationComplete={resetWrong}
     >
-      <p>{word}</p>
-    </button>
+      <button
+        onClick={onClick}
+        className={`w-50 h-50 rounded-lg ${
+          isClicked && !solved
+            ? "bg-neutral-600 text-white"
+            : "bg-neutral-200 text-black"
+        } ${isClicked && wrong ? "opacity-80" : ""} ${
+          solved ? "cursor-not-allowed opacity-20" : ""
+        } p-4`}
+        disabled={solved}
+      >
+        <p>{word}</p>
+      </button>
+    </motion.div>
   );
 }
 
@@ -70,6 +101,9 @@ export function Board({
   onClick,
   solved,
   numSolved,
+  mistakesLeft,
+  wrong,
+  resetWrong,
 }: {
   squares: string[];
   selected: string[];
@@ -77,6 +111,9 @@ export function Board({
   reset: () => void;
   solved: string[];
   numSolved: number;
+  mistakesLeft: number;
+  wrong: boolean;
+  resetWrong: () => void;
 }) {
   function handleClick(word: string) {
     onClick(word);
@@ -94,6 +131,9 @@ export function Board({
                 isClicked={selected.includes(squares[0])}
                 solved={solved.includes(squares[0])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -103,6 +143,9 @@ export function Board({
                 isClicked={selected.includes(squares[1])}
                 solved={solved.includes(squares[1])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -112,6 +155,9 @@ export function Board({
                 isClicked={selected.includes(squares[2])}
                 solved={solved.includes(squares[2])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -121,6 +167,9 @@ export function Board({
                 isClicked={selected.includes(squares[3])}
                 solved={solved.includes(squares[3])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
           </tr>
@@ -132,6 +181,9 @@ export function Board({
                 isClicked={selected.includes(squares[4])}
                 solved={solved.includes(squares[4])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -141,6 +193,9 @@ export function Board({
                 isClicked={selected.includes(squares[5])}
                 solved={solved.includes(squares[5])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -150,6 +205,9 @@ export function Board({
                 isClicked={selected.includes(squares[6])}
                 solved={solved.includes(squares[6])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -159,6 +217,9 @@ export function Board({
                 isClicked={selected.includes(squares[7])}
                 solved={solved.includes(squares[7])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
           </tr>
@@ -170,6 +231,9 @@ export function Board({
                 isClicked={selected.includes(squares[8])}
                 solved={solved.includes(squares[8])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -179,6 +243,9 @@ export function Board({
                 isClicked={selected.includes(squares[9])}
                 solved={solved.includes(squares[9])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -188,6 +255,9 @@ export function Board({
                 isClicked={selected.includes(squares[10])}
                 solved={solved.includes(squares[10])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -197,6 +267,9 @@ export function Board({
                 isClicked={selected.includes(squares[11])}
                 solved={solved.includes(squares[11])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
           </tr>
@@ -208,6 +281,9 @@ export function Board({
                 isClicked={selected.includes(squares[12])}
                 solved={solved.includes(squares[12])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -217,6 +293,9 @@ export function Board({
                 isClicked={selected.includes(squares[13])}
                 solved={solved.includes(squares[13])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -226,6 +305,9 @@ export function Board({
                 isClicked={selected.includes(squares[14])}
                 solved={solved.includes(squares[14])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
             <td>
@@ -235,6 +317,9 @@ export function Board({
                 isClicked={selected.includes(squares[15])}
                 solved={solved.includes(squares[15])}
                 numSolved={numSolved}
+                mistakesLeft={mistakesLeft}
+                wrong={wrong}
+                resetWrong={resetWrong}
               />
             </td>
           </tr>
