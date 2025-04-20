@@ -1,9 +1,9 @@
 "use client";
-import { Board, CheckButton } from "@/app/connections/components";
+import { Board, CheckButton, AnswerTile } from "@/app/connections/components";
 import { useState } from "react";
 
 export default function Connections() {
-  const squares = [
+  const [squares, setSquares] = useState([
     "lantern",
     "whistle",
     "pebble",
@@ -20,11 +20,13 @@ export default function Connections() {
     "quiver",
     "murmur",
     "thistle",
-  ];
+  ]);
   const [selected, setSelected] = useState([""]);
   const [wins, setWins] = useState([""]);
   const [found, setFound] = useState([""]);
   const [clicks, setClicks] = useState(1);
+  const [solved, setSolved] = useState([""]);
+  const [numGroups, setNumGroups] = useState(0);
 
   function onClick(word: string) {
     if (selected.includes(word)) {
@@ -48,6 +50,12 @@ export default function Connections() {
       found.push(solution.get(stringversion) || "");
       setFound(found);
       reset();
+      console.log(selected);
+      for (const word of selected) {
+        solved.push(word);
+        setSolved(solved);
+      }
+      setNumGroups(numGroups + 1);
     } else {
       window.alert("Try again!");
     }
@@ -62,11 +70,13 @@ export default function Connections() {
             selected={selected}
             onClick={onClick}
             reset={reset}
+            solved={solved}
+            numSolved={numGroups}
           />
           <CheckButton selected={selected} onClick={isGroup} />
         </div>
+        <p>{found}</p>
       </div>
-      <div className="flex w-full justify-center">{found}</div>
     </main>
   );
 }
