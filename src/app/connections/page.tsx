@@ -36,10 +36,10 @@ export default function Connections() {
   const [mistakesLeft, setMistakesLeft] = useState(4);
   const [guessed, setGuessed] = useState([""]);
   const [wrong, setWrong] = useState(false);
+
   function onClick(word: string) {
     if (selected.includes(word)) {
       setSelected(selected.filter((item) => item !== word));
-      console.log(selected);
     } else {
       if (selected.length < 5) {
         selected.push(word);
@@ -60,10 +60,12 @@ export default function Connections() {
   function endGame() {
     window.alert("Game ended!");
   }
-
+  function shuffle([...array]: string[]) {
+    return array.sort(() => Math.random() - 0.5);
+  }
   const answers = found.map((answer, index) => {
     return (
-      <li key={index}>
+      <li className="flex justify-center pb-4" key={index}>
         <AnswerTile categoryName={answer} />
       </li>
     );
@@ -76,7 +78,8 @@ export default function Connections() {
       found.push(solution.get(stringversion) || "");
       setFound(found);
       reset();
-      console.log(selected);
+      setSquares(squares.filter((item) => item !== "lantern"));
+      setSquares(squares.filter((element) => !selected.includes(element)));
       for (const word of selected) {
         solved.push(word);
         setSolved(solved);
@@ -100,24 +103,22 @@ export default function Connections() {
   }
 
   return (
-    <main className="flex min-h-screen px-50 py-50 text-2xl font-bold">
-      <div className="flex flex-row ">
-        <div className="flex justify-center flex-col">
-          <Board
-            squares={squares}
-            selected={selected}
-            onClick={onClick}
-            reset={reset}
-            solved={solved}
-            numSolved={numGroups}
-            mistakesLeft={mistakesLeft}
-            wrong={wrong}
-            resetWrong={resetWrong}
-          />
-          <Lives count={mistakesLeft} />
-          <CheckButton selected={selected} onClick={isGroup} />
-        </div>
-        <div className="flex flex-col list-none">{answers}</div>
+    <main className="flex min-h-screen px-50 py-50 text-2xl font-bold justify-center">
+      <div className="flex flex-col justify-center content-center">
+        <div className="flex flex-col list-none justify-center">{answers}</div>
+        <Board
+          squares={squares}
+          selected={selected}
+          onClick={onClick}
+          reset={reset}
+          solved={solved}
+          numSolved={numGroups}
+          mistakesLeft={mistakesLeft}
+          wrong={wrong}
+          resetWrong={resetWrong}
+        />
+        <Lives count={mistakesLeft} />
+        <CheckButton selected={selected} onClick={isGroup} />
       </div>
     </main>
   );
@@ -129,7 +130,9 @@ const group1 = ["", "glimmer", "lantern", "pebble", "whistle"];
 const group2 = ["", "canvas", "drizzle", "ember", "flicker"];
 const group3 = ["", "hollow", "meadow", "ripple", "velvet"];
 const group4 = ["", "cobble", "murmur", "quiver", "thistle"];
+const group5 = ["", "drizzle", "murmur", "ripple", "thistle"];
 solution.set(JSON.stringify(group1), "test1");
 solution.set(JSON.stringify(group2), "test2");
 solution.set(JSON.stringify(group3), "test3");
 solution.set(JSON.stringify(group4), "test4");
+solution.set(JSON.stringify(group5), "test5");

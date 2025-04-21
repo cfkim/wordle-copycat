@@ -25,9 +25,17 @@ export function Lives({ count }: { count: number }) {
 export function AnswerTile({ categoryName }: { categoryName: string }) {
   if (categoryName != "") {
     return (
-      <div className="flex w-210 h-50 rounded-lg bg-neutral-600 text-white justify-center ">
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 1.6,
+          scale: { type: "spring", visualDuration: 0.4, bounce: 0.3 },
+        }}
+        className="flex w-208 h-50 rounded-lg bg-neutral-600 text-white justify-center "
+      >
         <p className="content-center">{categoryName}</p>
-      </div>
+      </motion.div>
     );
   }
 }
@@ -40,7 +48,7 @@ export function CheckButton({
 }) {
   return (
     <div className="flex justify-center">
-      <button
+      <motion.button
         className={
           "w-32 bg-sky-500 enabled:hover:bg-sky-700 text-white font-bold py-2 px-4 rounded disabled:opacity-25"
         }
@@ -48,7 +56,7 @@ export function CheckButton({
         onClick={onClick}
       >
         Submit
-      </button>
+      </motion.button>
     </div>
   );
 }
@@ -74,9 +82,13 @@ export function Tile({
 }) {
   return (
     <motion.div
+      key={word}
       animate={wrong && isClicked ? { x: [-30, 30, -10, 10, 0] } : ""}
-      transition={{ duration: 0.7 }}
+      transition={{
+        duration: 0.7,
+      }}
       onAnimationComplete={resetWrong}
+      layout
     >
       <button
         onClick={onClick}
@@ -121,210 +133,41 @@ export function Board({
 
   return (
     <div className="h-full flex justify-center content-center">
-      <table className="w-210 h-210 table-fixed">
-        <tbody>
-          <tr>
-            <td>
-              <Tile
-                word={squares[0]}
-                onClick={() => handleClick(squares[0])}
-                isClicked={selected.includes(squares[0])}
-                solved={solved.includes(squares[0])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[1]}
-                onClick={() => handleClick(squares[1])}
-                isClicked={selected.includes(squares[1])}
-                solved={solved.includes(squares[1])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[2]}
-                onClick={() => handleClick(squares[2])}
-                isClicked={selected.includes(squares[2])}
-                solved={solved.includes(squares[2])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[3]}
-                onClick={() => handleClick(squares[3])}
-                isClicked={selected.includes(squares[3])}
-                solved={solved.includes(squares[3])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Tile
-                word={squares[4]}
-                onClick={() => handleClick(squares[4])}
-                isClicked={selected.includes(squares[4])}
-                solved={solved.includes(squares[4])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[5]}
-                onClick={() => handleClick(squares[5])}
-                isClicked={selected.includes(squares[5])}
-                solved={solved.includes(squares[5])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[6]}
-                onClick={() => handleClick(squares[6])}
-                isClicked={selected.includes(squares[6])}
-                solved={solved.includes(squares[6])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[7]}
-                onClick={() => handleClick(squares[7])}
-                isClicked={selected.includes(squares[7])}
-                solved={solved.includes(squares[7])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Tile
-                word={squares[8]}
-                onClick={() => handleClick(squares[8])}
-                isClicked={selected.includes(squares[8])}
-                solved={solved.includes(squares[8])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[9]}
-                onClick={() => handleClick(squares[9])}
-                isClicked={selected.includes(squares[9])}
-                solved={solved.includes(squares[9])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[10]}
-                onClick={() => handleClick(squares[10])}
-                isClicked={selected.includes(squares[10])}
-                solved={solved.includes(squares[10])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[11]}
-                onClick={() => handleClick(squares[11])}
-                isClicked={selected.includes(squares[11])}
-                solved={solved.includes(squares[11])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Tile
-                word={squares[12]}
-                onClick={() => handleClick(squares[12])}
-                isClicked={selected.includes(squares[12])}
-                solved={solved.includes(squares[12])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[13]}
-                onClick={() => handleClick(squares[13])}
-                isClicked={selected.includes(squares[13])}
-                solved={solved.includes(squares[13])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[14]}
-                onClick={() => handleClick(squares[14])}
-                isClicked={selected.includes(squares[14])}
-                solved={solved.includes(squares[14])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-            <td>
-              <Tile
-                word={squares[15]}
-                onClick={() => handleClick(squares[15])}
-                isClicked={selected.includes(squares[15])}
-                solved={solved.includes(squares[15])}
-                numSolved={numSolved}
-                mistakesLeft={mistakesLeft}
-                wrong={wrong}
-                resetWrong={resetWrong}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <ul style={container}>
+        {squares.map((word) => (
+          <motion.li key={word} layout transition={spring} style={{}}>
+            <Tile
+              word={word}
+              onClick={() => handleClick(word)}
+              isClicked={selected.includes(word)}
+              solved={solved.includes(word)}
+              numSolved={numSolved}
+              mistakesLeft={mistakesLeft}
+              wrong={wrong}
+              resetWrong={resetWrong}
+            />
+          </motion.li>
+        ))}
+      </ul>
     </div>
   );
 }
+
+const spring = {
+  type: "spring",
+  damping: 20,
+  stiffness: 300,
+};
+const container: React.CSSProperties = {
+  listStyle: "none",
+  padding: 0,
+  margin: 0,
+  position: "relative",
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 10,
+  width: 1000,
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+};
