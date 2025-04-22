@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { div } from "framer-motion/client";
 
 export const found = [""];
 const colors = ["bg-yellow-300", "bg-red-300", "bg-teal-300", "bg-purple-300"];
@@ -38,6 +39,19 @@ export function AnswerTile({ categoryName }: { categoryName: string }) {
       </motion.div>
     );
   }
+}
+
+export function ShuffleButton({ shuffle }: { shuffle: () => void }) {
+  return (
+    <div className="flex justify-center">
+      <button
+        onClick={shuffle}
+        className="w-32 bg-sky-500 enabled:hover:bg-sky-700 text-white font-bold py-2 px-4 rounded disabled:opacity-25"
+      >
+        Shuffle
+      </button>
+    </div>
+  );
 }
 export function CheckButton({
   selected,

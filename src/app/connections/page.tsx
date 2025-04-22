@@ -4,6 +4,7 @@ import {
   CheckButton,
   AnswerTile,
   Lives,
+  ShuffleButton,
 } from "@/app/connections/components";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -60,8 +61,13 @@ export default function Connections() {
   function endGame() {
     window.alert("Game ended!");
   }
-  function shuffle([...array]: string[]) {
-    return array.sort(() => Math.random() - 0.5);
+
+  function shuffle() {
+    setSquares(shuffleCalc(squares));
+  }
+
+  function shuffleCalc([...array]: string[]) {
+    return [...array].sort(() => Math.random() - 0.5);
   }
   const answers = found.map((answer, index) => {
     return (
@@ -75,16 +81,31 @@ export default function Connections() {
   async function isGroup() {
     const stringversion = JSON.stringify(selected.sort());
     if (solution.has(stringversion)) {
-      found.push(solution.get(stringversion) || "");
-      setFound(found);
-      reset();
-      setSquares(squares.filter((item) => item !== "lantern"));
+      // makes new answer tile
+      // found.push(solution.get(stringversion) || "");
+      // setFound(found);
+      // reset();
+
+      // move selected tiles to first four boxes
+      setSquares([
+        ...selected.slice(1),
+        ...squares.filter((element) => !selected.includes(element)),
+      ]);
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // makes a new answer tile
       setSquares(squares.filter((element) => !selected.includes(element)));
       for (const word of selected) {
         solved.push(word);
         setSolved(solved);
       }
+
       setNumGroups(numGroups + 1);
+
+      found.push(solution.get(stringversion) || "");
+      setFound(found);
+      reset();
     } else {
       if (!guessed.includes(stringversion)) {
         setWrong(true);
@@ -118,7 +139,12 @@ export default function Connections() {
           resetWrong={resetWrong}
         />
         <Lives count={mistakesLeft} />
-        <CheckButton selected={selected} onClick={isGroup} />
+        <div className="flex justify-center">
+          <div className="flex flex-row justify-evenly w-1/3">
+            <ShuffleButton shuffle={shuffle} />
+            <CheckButton selected={selected} onClick={isGroup} />
+          </div>
+        </div>
       </div>
     </main>
   );
