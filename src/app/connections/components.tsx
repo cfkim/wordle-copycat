@@ -14,7 +14,7 @@ export function Lives({ count }: { count: number }) {
         Mistakes Remaining:
         <div className="flex justify-left w-1/5 px-5">
           {Array.from({ length: count }, (_, index) => (
-            <div className="px-1" key={index}>
+            <div className="flex px-1 items-center" key={index}>
               <div className="w-6 h-6 bg-neutral-600 rounded-full"></div>
             </div>
           ))}
@@ -23,7 +23,13 @@ export function Lives({ count }: { count: number }) {
     </motion.div>
   );
 }
-export function AnswerTile({ categoryName }: { categoryName: string }) {
+export function AnswerTile({
+  categoryName,
+  words,
+}: {
+  categoryName: string;
+  words: string;
+}) {
   if (categoryName != "") {
     return (
       <motion.div
@@ -35,7 +41,12 @@ export function AnswerTile({ categoryName }: { categoryName: string }) {
         }}
         className="flex w-208 h-50 rounded-lg bg-neutral-600 text-white justify-center "
       >
-        <p className="content-center">{categoryName}</p>
+        <div className="content-center">
+          <div className="flex flex-col items-center">
+            <div className="pb-6">{categoryName}</div>
+            <div>{words}</div>
+          </div>
+        </div>
       </motion.div>
     );
   }
@@ -97,7 +108,7 @@ export function Tile({
   return (
     <motion.div
       key={word}
-      animate={wrong && isClicked ? { x: [-30, 30, -10, 10, 0] } : ""}
+      animate={wrong && isClicked ? { x: [-10, 10, -5, 5, 0] } : ""}
       transition={{
         duration: 0.7,
       }}

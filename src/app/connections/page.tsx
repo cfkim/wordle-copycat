@@ -72,7 +72,7 @@ export default function Connections() {
   const answers = found.map((answer, index) => {
     return (
       <li className="flex justify-center pb-4" key={index}>
-        <AnswerTile categoryName={answer} />
+        <AnswerTile categoryName={answer} words={matches.get(answer) || ""} />
       </li>
     );
   });
@@ -81,17 +81,13 @@ export default function Connections() {
   async function isGroup() {
     const stringversion = JSON.stringify(selected.sort());
     if (solution.has(stringversion)) {
-      // makes new answer tile
-      // found.push(solution.get(stringversion) || "");
-      // setFound(found);
-      // reset();
-
       // move selected tiles to first four boxes
       setSquares([
         ...selected.slice(1),
         ...squares.filter((element) => !selected.includes(element)),
       ]);
 
+      // pause
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // makes a new answer tile
@@ -105,6 +101,7 @@ export default function Connections() {
 
       found.push(solution.get(stringversion) || "");
       setFound(found);
+
       reset();
     } else {
       if (!guessed.includes(stringversion)) {
@@ -152,6 +149,7 @@ export default function Connections() {
 
 // holds the answer keys
 const solution = new Map<string, string>();
+const matches = new Map<string, string>();
 const group1 = ["", "glimmer", "lantern", "pebble", "whistle"];
 const group2 = ["", "canvas", "drizzle", "ember", "flicker"];
 const group3 = ["", "hollow", "meadow", "ripple", "velvet"];
@@ -162,3 +160,9 @@ solution.set(JSON.stringify(group2), "test2");
 solution.set(JSON.stringify(group3), "test3");
 solution.set(JSON.stringify(group4), "test4");
 solution.set(JSON.stringify(group5), "test5");
+// to get matches
+matches.set("test1", JSON.stringify(group1));
+matches.set("test2", JSON.stringify(group2));
+matches.set("test3", JSON.stringify(group3));
+matches.set("test4", JSON.stringify(group4));
+matches.set("test5", JSON.stringify(group5));
