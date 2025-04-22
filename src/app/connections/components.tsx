@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { div } from "framer-motion/client";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const found = [""];
 const colors = ["bg-yellow-300", "bg-red-300", "bg-teal-300", "bg-purple-300"];
@@ -13,11 +12,23 @@ export function Lives({ count }: { count: number }) {
       <div className="flex flex-row w-2/3 justify-center">
         Mistakes Remaining:
         <div className="flex justify-left w-1/5 px-5">
-          {Array.from({ length: count }, (_, index) => (
-            <div className="flex px-1 items-center" key={index}>
-              <div className="w-6 h-6 bg-neutral-600 rounded-full"></div>
-            </div>
-          ))}
+          <AnimatePresence>
+            {Array.from({ length: count }, (_, index) => (
+              <motion.div
+                className="flex px-1 items-center"
+                key={index}
+                transition={{
+                  transform: { duration: 0.2 },
+                  opacity: { duration: 0.2 },
+                }}
+                initial={{ transform: "scale(0.8)", opacity: 0 }}
+                animate={{ transform: "scale(1)", opacity: 1 }}
+                exit={{ transform: "scale(0.8)", opacity: 0 }}
+              >
+                <div className="w-6 h-6 bg-neutral-600 rounded-full"></div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </motion.div>
