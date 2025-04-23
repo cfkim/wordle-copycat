@@ -59,7 +59,6 @@ export default function Connections() {
 
   function resetWrong() {
     setWrong(false);
-    setIsVisible(false);
   }
   function endGame() {
     setIsVisible(true);
@@ -110,24 +109,21 @@ export default function Connections() {
       reset();
     } else {
       if (!guessed.includes(stringversion)) {
-        // // see if one away
-        // let match = false;
-        // for (const [words, theme] of solution) {
-        //   let testArray = JSON.parse(words).filter(
-        //     (item: string) => !selected.includes(item)
-        //   );
-        //   console.log(testArray);
-        //   if (testArray.length == 1) {
-        //     match = true;
-        //     console.log("one away");
+        // see if one away
 
-        //     break;
-        //   }
-        // }
+        // loop through solutions
+        for (const [words, theme] of solution) {
+          let testArray = JSON.parse(words).filter(
+            (item: string) => !selected.includes(item)
+          );
 
-        // if (match && !isVisible) {
-        //   setIsVisible(true);
-        // }
+          if (testArray.length == 1) {
+            setIsVisible(true);
+            setMessage("One Away!");
+            break;
+          }
+        }
+
         setWrong(true);
         guessed.push(JSON.stringify(selected.sort()));
         setGuessed(guessed);
@@ -154,7 +150,7 @@ export default function Connections() {
           animate={isVisible ? { opacity: [0, 1, 1, 1, 1, 0] } : ""}
           exit={{ opacity: 0 }}
           onAnimationComplete={() => {
-            resetWrong;
+            setIsVisible(false);
           }}
           transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
         >
