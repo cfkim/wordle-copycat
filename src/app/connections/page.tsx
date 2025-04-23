@@ -6,7 +6,7 @@ import {
   Lives,
   ShuffleButton,
 } from "@/app/connections/components";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Connections() {
@@ -37,6 +37,8 @@ export default function Connections() {
   const [mistakesLeft, setMistakesLeft] = useState(4);
   const [guessed, setGuessed] = useState([""]);
   const [wrong, setWrong] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [message, setMessage] = useState("");
 
   function onClick(word: string) {
     if (selected.includes(word)) {
@@ -57,9 +59,11 @@ export default function Connections() {
 
   function resetWrong() {
     setWrong(false);
+    setIsVisible(false);
   }
   function endGame() {
-    window.alert("Game ended!");
+    setIsVisible(true);
+    setMessage("Next Time!");
   }
 
   function shuffle() {
@@ -71,7 +75,7 @@ export default function Connections() {
   }
   const answers = found.map((answer, index) => {
     return (
-      <li className="flex justify-center pb-4" key={index}>
+      <li className="flex justify-center pb-2 items-center" key={index}>
         <AnswerTile categoryName={answer} words={matches.get(answer) || ""} />
       </li>
     );
@@ -80,6 +84,7 @@ export default function Connections() {
   // checks if its a valid solution
   async function isGroup() {
     const stringversion = JSON.stringify(selected.sort());
+
     if (solution.has(stringversion)) {
       // move selected tiles to first four boxes
       setSquares([
@@ -105,9 +110,28 @@ export default function Connections() {
       reset();
     } else {
       if (!guessed.includes(stringversion)) {
+        // // see if one away
+        // let match = false;
+        // for (const [words, theme] of solution) {
+        //   let testArray = JSON.parse(words).filter(
+        //     (item: string) => !selected.includes(item)
+        //   );
+        //   console.log(testArray);
+        //   if (testArray.length == 1) {
+        //     match = true;
+        //     console.log("one away");
+
+        //     break;
+        //   }
+        // }
+
+        // if (match && !isVisible) {
+        //   setIsVisible(true);
+        // }
         setWrong(true);
         guessed.push(JSON.stringify(selected.sort()));
         setGuessed(guessed);
+
         if (mistakesLeft > 1) {
           setMistakesLeft(mistakesLeft - 1);
         } else {
@@ -115,13 +139,28 @@ export default function Connections() {
           endGame();
         }
       } else {
-        window.alert("you already guessed that");
+        setIsVisible(true);
+        setMessage("Already guessed!");
       }
     }
   }
 
   return (
     <main className="flex min-h-screen px-50 py-50 text-2xl font-bold justify-center">
+      <AnimatePresence>
+        <motion.div
+          className="z-100 top-25 w-45 h-15 font-normal bg-gray-800 rounded flex justify-center items-center absolute"
+          initial={{ opacity: 0 }}
+          animate={isVisible ? { opacity: [0, 1, 1, 1, 1, 0] } : ""}
+          exit={{ opacity: 0 }}
+          onAnimationComplete={() => {
+            resetWrong;
+          }}
+          transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
+        >
+          <p className="text-white text-lg text-center">{message}</p>
+        </motion.div>
+      </AnimatePresence>
       <div className="flex flex-col justify-center content-center">
         <div className="flex flex-col list-none justify-center">{answers}</div>
         <Board
@@ -154,15 +193,15 @@ const group1 = ["", "glimmer", "lantern", "pebble", "whistle"];
 const group2 = ["", "canvas", "drizzle", "ember", "flicker"];
 const group3 = ["", "hollow", "meadow", "ripple", "velvet"];
 const group4 = ["", "cobble", "murmur", "quiver", "thistle"];
-const group5 = ["", "drizzle", "murmur", "ripple", "thistle"];
+//const group5 = ["", "drizzle", "murmur", "ripple", "thistle"];
 solution.set(JSON.stringify(group1), "test1");
 solution.set(JSON.stringify(group2), "test2");
 solution.set(JSON.stringify(group3), "test3");
 solution.set(JSON.stringify(group4), "test4");
-solution.set(JSON.stringify(group5), "test5");
+//solution.set(JSON.stringify(group5), "test5");
 // to get matches
 matches.set("test1", JSON.stringify(group1));
 matches.set("test2", JSON.stringify(group2));
 matches.set("test3", JSON.stringify(group3));
 matches.set("test4", JSON.stringify(group4));
-matches.set("test5", JSON.stringify(group5));
+//matches.set("test5", JSON.stringify(group5));

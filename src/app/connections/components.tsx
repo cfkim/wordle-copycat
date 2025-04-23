@@ -50,7 +50,7 @@ export function AnswerTile({
           duration: 1.6,
           scale: { type: "spring", visualDuration: 0.4, bounce: 0.3 },
         }}
-        className="flex w-208 h-50 rounded-lg bg-neutral-600 text-white justify-center "
+        className="flex w-208 h-50 rounded-lg bg-neutral-600 text-white justify-center"
       >
         <div className="content-center">
           <div className="flex flex-col items-center">
@@ -68,7 +68,7 @@ export function ShuffleButton({ shuffle }: { shuffle: () => void }) {
     <div className="flex justify-center">
       <button
         onClick={shuffle}
-        className="w-32 bg-sky-500 enabled:hover:bg-sky-700 text-white font-bold py-2 px-4 rounded disabled:opacity-25"
+        className="w-32 bg-transparent enabled:outline-black enabled:text-black text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
       >
         Shuffle
       </button>
@@ -86,7 +86,7 @@ export function CheckButton({
     <div className="flex justify-center">
       <motion.button
         className={
-          "w-32 bg-sky-500 enabled:hover:bg-sky-700 text-white font-bold py-2 px-4 rounded disabled:opacity-25"
+          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
         }
         disabled={selected.length != 5}
         onClick={onClick}
@@ -171,7 +171,7 @@ export function Board({
     <div className="h-full flex justify-center content-center">
       <ul style={container}>
         {squares.map((word) => (
-          <motion.li key={word} layout transition={spring} style={{}}>
+          <motion.li key={word} layout transition={spring}>
             <Tile
               word={word}
               onClick={() => handleClick(word)}
