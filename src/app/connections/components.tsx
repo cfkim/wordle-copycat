@@ -161,7 +161,7 @@ export function Tile({
     >
       <button
         onClick={onClick}
-        className={`w-50 h-50 rounded-lg ${
+        className={`transition duration 2100 ease-in-out w-50 h-50 rounded-lg ${
           isClicked && !solved && !reveal
             ? "bg-neutral-600 text-white"
             : "bg-neutral-200 text-black"
