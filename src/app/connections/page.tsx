@@ -11,22 +11,22 @@ import { useEffect, useState } from "react";
 
 export default function Connections() {
   const [squares, setSquares] = useState([
-    "LANTERN",
     "WHISTLE",
-    "PEBBLE",
-    "GLIMMER",
-    "CANVAS",
-    "FLICKER",
-    "DRIZZLE",
-    "EMBER",
-    "MEADOW",
-    "RIPPLE",
-    "VELVET",
     "HOLLOW",
+    "THISTLE",
+    "EMBER",
+    "PEBBLE",
+    "VELVET",
+    "MURMUR",
     "COBBLE",
     "QUIVER",
-    "MURMUR",
-    "THISTLE",
+    "DRIZZLE",
+    "GLIMMER",
+    "RIPPLE",
+    "MEADOW",
+    "LANTERN",
+    "CANVAS",
+    "FLICKER",
   ]);
 
   const [selected, setSelected] = useState([""]);
@@ -41,6 +41,7 @@ export default function Connections() {
   const [message, setMessage] = useState("");
   const [orderSelected, setOrderSelected] = useState<number[]>([]);
   const [reveal, setReveal] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   function onClick(word: string, index: number) {
     if (selected.includes(word)) {
@@ -60,17 +61,17 @@ export default function Connections() {
   function reset() {
     setSelected([""]);
     setClicks(1);
+    setSubmitted(false);
   }
 
   function resetWrong() {
     setWrong(false);
+    setSubmitted(false);
   }
 
   async function endGame() {
     setSelected([""]);
     setWrong(false);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     setIsVisible(true);
     setMessage("Next Time!");
     setReveal(true);
@@ -78,6 +79,7 @@ export default function Connections() {
 
   useEffect(() => {
     const solve = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       for (const [words, theme] of solution) {
         setSelected(JSON.parse(words));
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -113,7 +115,8 @@ export default function Connections() {
         setFound(found);
 
         reset();
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // pause
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
     };
 
@@ -145,10 +148,19 @@ export default function Connections() {
 
   // checks if its a valid solution
   async function isGroup() {
-    console.log("checking");
     const stringversion = JSON.stringify(selected.sort());
     console.log(stringversion);
     if (solution.has(stringversion)) {
+      setSubmitted(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      for (const word of selected) {
+        solved.push(word);
+        setSolved(solved);
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // move selected tiles to first four boxes
       setSquares([
         ...selected.slice(1),
@@ -160,10 +172,6 @@ export default function Connections() {
 
       // makes a new answer tile
       setSquares(squares.filter((element) => !selected.includes(element)));
-      for (const word of selected) {
-        solved.push(word);
-        setSolved(solved);
-      }
 
       setNumGroups(numGroups + 1);
 
@@ -173,6 +181,8 @@ export default function Connections() {
       reset();
     } else {
       if (!guessed.includes(stringversion)) {
+        setSubmitted(true);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         if (mistakesLeft > 1) {
           setMistakesLeft(mistakesLeft - 1);
           // see if one away
@@ -233,6 +243,7 @@ export default function Connections() {
           wrong={wrong}
           resetWrong={resetWrong}
           reveal={reveal}
+          submitted={submitted}
         />
         <Lives count={mistakesLeft} />
         <div className="flex justify-center">

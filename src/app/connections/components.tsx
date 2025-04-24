@@ -88,7 +88,7 @@ export function ShuffleButton({
       <button
         disabled={reveal}
         onClick={shuffle}
-        className="w-32 bg-transparent enabled:outline-black enabled:text-black text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
+        className="w-32 bg-transparent enabled:outline-white enabled:text-white text-white font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
       >
         Shuffle
       </button>
@@ -145,18 +145,24 @@ export function Tile({
       key={word}
       animate={{
         ...(wrong && isClicked ? { x: [-10, 10, -5, 5, 0] } : ""),
-        ...(reveal && solved ? { x: [-10, 10, -5, 5, 0] } : ""),
       }}
       transition={{
         duration: 0.7,
       }}
       onAnimationComplete={resetWrong}
       layout
+      variants={{
+        enter: {
+          ...(isClicked
+            ? { y: [0, -35, 0], transition: { duration: 0.4 } }
+            : ""),
+        },
+      }}
     >
       <button
         onClick={onClick}
         className={`w-50 h-50 rounded-lg ${
-          isClicked && !solved
+          isClicked && !solved && !reveal
             ? "bg-neutral-600 text-white"
             : "bg-neutral-200 text-black"
         } ${isClicked && wrong ? "opacity-80" : ""} ${
@@ -170,6 +176,17 @@ export function Tile({
   );
 }
 
+// For staggering submitted tiles
+const variants = {
+  enter: {
+    transition: { staggerChildren: 0.02, delayChildren: 0.1 },
+  },
+  exit: {
+    opacity: 1,
+    transition: { staggerChildren: 0.02, staggerDirection: -1 },
+  },
+};
+
 export function Board({
   squares,
   selected,
@@ -180,6 +197,7 @@ export function Board({
   wrong,
   resetWrong,
   reveal,
+  submitted,
 }: {
   squares: string[];
   selected: string[];
@@ -191,6 +209,7 @@ export function Board({
   wrong: boolean;
   resetWrong: () => void;
   reveal: boolean;
+  submitted: boolean;
 }) {
   function handleClick(word: string, index: number) {
     onClick(word, index);
@@ -198,7 +217,13 @@ export function Board({
 
   return (
     <div className="h-full flex justify-center content-center text-2xl">
-      <ul style={container}>
+      <motion.ul
+        style={container}
+        variants={variants}
+        initial="exit"
+        animate={`${submitted ? "enter" : ""}`} // animate tiles if wrong
+        exit="exit"
+      >
         {squares.map((word, index) => (
           <motion.li key={word} layout transition={spring}>
             <Tile
@@ -214,16 +239,17 @@ export function Board({
             />
           </motion.li>
         ))}
-      </ul>
+      </motion.ul>
     </div>
   );
 }
 
 const spring = {
   type: "spring",
-  damping: 20,
+  damping: 50,
   stiffness: 300,
 };
+
 const container: React.CSSProperties = {
   listStyle: "none",
   padding: 0,
