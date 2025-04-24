@@ -11,22 +11,22 @@ import { useEffect, useState } from "react";
 
 export default function Connections() {
   const [squares, setSquares] = useState([
-    "lantern",
-    "whistle",
-    "pebble",
-    "glimmer",
-    "canvas",
-    "flicker",
-    "drizzle",
-    "ember",
-    "meadow",
-    "ripple",
-    "velvet",
-    "hollow",
-    "cobble",
-    "quiver",
-    "murmur",
-    "thistle",
+    "LANTERN",
+    "WHISTLE",
+    "PEBBLE",
+    "GLIMMER",
+    "CANVAS",
+    "FLICKER",
+    "DRIZZLE",
+    "EMBER",
+    "MEADOW",
+    "RIPPLE",
+    "VELVET",
+    "HOLLOW",
+    "COBBLE",
+    "QUIVER",
+    "MURMUR",
+    "THISTLE",
   ]);
 
   const [selected, setSelected] = useState([""]);
@@ -39,12 +39,17 @@ export default function Connections() {
   const [wrong, setWrong] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState("");
+  const [orderSelected, setOrderSelected] = useState<number[]>([]);
+  const [reveal, setReveal] = useState(false);
 
-  function onClick(word: string) {
+  function onClick(word: string, index: number) {
     if (selected.includes(word)) {
+      setOrderSelected(orderSelected.filter((item) => item !== index));
       setSelected(selected.filter((item) => item !== word));
     } else {
       if (selected.length < 5) {
+        orderSelected.push(index);
+        setOrderSelected(orderSelected);
         selected.push(word);
         setSelected(selected);
         setClicks(clicks + 1);
@@ -60,10 +65,64 @@ export default function Connections() {
   function resetWrong() {
     setWrong(false);
   }
-  function endGame() {
+
+  async function endGame() {
+    setSelected([""]);
+    setWrong(false);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     setIsVisible(true);
     setMessage("Next Time!");
+    setReveal(true);
   }
+
+  useEffect(() => {
+    const solve = async () => {
+      for (const [words, theme] of solution) {
+        setSelected(JSON.parse(words));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // move selected tiles to first four boxes
+        setSquares((prevSquares) => [
+          ...JSON.parse(words).slice(1),
+          ...prevSquares.filter(
+            (element) => !JSON.parse(words).includes(element)
+          ),
+        ]);
+
+        // pause
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // makes a new answer tile
+
+        setSquares((prevSquares) =>
+          prevSquares.filter((element) => !JSON.parse(words).includes(element))
+        );
+
+        console.log(squares);
+
+        // add to solved
+        for (const word of selected) {
+          solved.push(word);
+          setSolved(solved);
+        }
+
+        setNumGroups((prevNumGroups) => prevNumGroups + 1);
+
+        found.push(solution.get(words) || "");
+        setFound(found);
+
+        reset();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    };
+
+    if (reveal) {
+      solve();
+    } else {
+      console.log("not yet");
+    }
+  }, [reveal]);
 
   function shuffle() {
     setSquares(shuffleCalc(squares));
@@ -75,15 +134,20 @@ export default function Connections() {
   const answers = found.map((answer, index) => {
     return (
       <li className="flex justify-center pb-2 items-center" key={index}>
-        <AnswerTile categoryName={answer} words={matches.get(answer) || ""} />
+        <AnswerTile
+          categoryName={answer}
+          words={JSON.parse(matches.get(answer) || "[]") || ""}
+          numGroups={numGroups}
+        />
       </li>
     );
   });
 
   // checks if its a valid solution
   async function isGroup() {
+    console.log("checking");
     const stringversion = JSON.stringify(selected.sort());
-
+    console.log(stringversion);
     if (solution.has(stringversion)) {
       // move selected tiles to first four boxes
       setSquares([
@@ -105,31 +169,30 @@ export default function Connections() {
 
       found.push(solution.get(stringversion) || "");
       setFound(found);
-
+      solution.delete(stringversion);
       reset();
     } else {
       if (!guessed.includes(stringversion)) {
-        // see if one away
-
-        // loop through solutions
-        for (const [words, theme] of solution) {
-          let testArray = JSON.parse(words).filter(
-            (item: string) => !selected.includes(item)
-          );
-
-          if (testArray.length == 1) {
-            setIsVisible(true);
-            setMessage("One Away!");
-            break;
-          }
-        }
-
-        setWrong(true);
-        guessed.push(JSON.stringify(selected.sort()));
-        setGuessed(guessed);
-
         if (mistakesLeft > 1) {
           setMistakesLeft(mistakesLeft - 1);
+          // see if one away
+
+          // loop through solutions
+          for (const [words, theme] of solution) {
+            let testArray = JSON.parse(words).filter(
+              (item: string) => !selected.includes(item)
+            );
+
+            if (testArray.length == 1) {
+              setIsVisible(true);
+              setMessage("One Away!");
+              break;
+            }
+          }
+
+          setWrong(true);
+          guessed.push(JSON.stringify(selected.sort()));
+          setGuessed(guessed);
         } else {
           setMistakesLeft(mistakesLeft - 1);
           endGame();
@@ -169,12 +232,17 @@ export default function Connections() {
           mistakesLeft={mistakesLeft}
           wrong={wrong}
           resetWrong={resetWrong}
+          reveal={reveal}
         />
         <Lives count={mistakesLeft} />
         <div className="flex justify-center">
           <div className="flex flex-row justify-evenly w-1/3">
-            <ShuffleButton shuffle={shuffle} />
-            <CheckButton selected={selected} onClick={isGroup} />
+            <ShuffleButton shuffle={shuffle} reveal={reveal} />
+            <CheckButton
+              selected={selected}
+              onClick={isGroup}
+              reveal={reveal}
+            />
           </div>
         </div>
       </div>
@@ -185,19 +253,29 @@ export default function Connections() {
 // holds the answer keys
 const solution = new Map<string, string>();
 const matches = new Map<string, string>();
-const group1 = ["", "glimmer", "lantern", "pebble", "whistle"];
-const group2 = ["", "canvas", "drizzle", "ember", "flicker"];
-const group3 = ["", "hollow", "meadow", "ripple", "velvet"];
-const group4 = ["", "cobble", "murmur", "quiver", "thistle"];
-//const group5 = ["", "drizzle", "murmur", "ripple", "thistle"];
-solution.set(JSON.stringify(group1), "test1");
-solution.set(JSON.stringify(group2), "test2");
-solution.set(JSON.stringify(group3), "test3");
-solution.set(JSON.stringify(group4), "test4");
-//solution.set(JSON.stringify(group5), "test5");
+const group1 = ["", "GLIMMER", "LANTERN", "PEBBLE", "WHISTLE"];
+const group2 = ["", "CANVAS", "DRIZZLE", "EMBER", "FLICKER"];
+const group3 = ["", "HOLLOW", "MEADOW", "RIPPLE", "VELVET"];
+const group4 = ["", "COBBLE", "MURMUR", "QUIVER", "THISTLE"];
+//const group5 = ["", "DRIZZLE", "MURMUR", "RIPPLE", "THISTLE"];
+
+solution.set(JSON.stringify(group1), "TEST1");
+solution.set(JSON.stringify(group2), "TEST2");
+solution.set(JSON.stringify(group3), "TEST3");
+solution.set(JSON.stringify(group4), "TEST4");
+//solution.set(JSON.stringify(group5), "TEST5");
+
 // to get matches
-matches.set("test1", JSON.stringify(group1));
-matches.set("test2", JSON.stringify(group2));
-matches.set("test3", JSON.stringify(group3));
-matches.set("test4", JSON.stringify(group4));
-//matches.set("test5", JSON.stringify(group5));
+matches.set("TEST1", JSON.stringify(group1));
+matches.set("TEST2", JSON.stringify(group2));
+matches.set("TEST3", JSON.stringify(group3));
+matches.set("TEST4", JSON.stringify(group4));
+//matches.set("TEST5", JSON.stringify(group5));
+
+// tiles in same row
+const sameRow = [
+  [0, 1, 2, 3],
+  [4, 5, 6, 7],
+  [8, 9, 10, 11],
+  [12, 13, 14, 15],
+];

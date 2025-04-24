@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { AnimatePresence, easeIn, motion } from "framer-motion";
 
 export const found = [""];
-const colors = ["bg-yellow-300", "bg-red-300", "bg-teal-300", "bg-purple-300"];
+const colors = ["bg-yellow-100", "bg-red-100", "bg-teal-100", "bg-purple-100"];
 
 export function Lives({ count }: { count: number }) {
   return (
@@ -37,10 +37,19 @@ export function Lives({ count }: { count: number }) {
 export function AnswerTile({
   categoryName,
   words,
+  numGroups,
 }: {
   categoryName: string;
-  words: string;
+  words: string[];
+  numGroups: number;
 }) {
+  const countRef = useRef(numGroups);
+  let color = "";
+  if (countRef.current != 0) {
+    color = colors[countRef.current - 1];
+    console.log(color);
+  }
+
   if (categoryName != "") {
     return (
       <motion.div
@@ -50,12 +59,16 @@ export function AnswerTile({
           duration: 1.6,
           scale: { type: "spring", visualDuration: 0.4, bounce: 0.3 },
         }}
-        className="flex w-208 h-50 rounded-lg bg-neutral-600 text-white justify-center"
+        className={`flex w-208 h-50 rounded-lg ${color} text-black justify-center`}
       >
-        <div className="content-center">
+        <div className="content-center text-2xl">
           <div className="flex flex-col items-center">
             <div className="pb-6">{categoryName}</div>
-            <div>{words}</div>
+            <div className="font-normal">
+              {JSON.stringify(words.slice(1))
+                .replace(/\[|\]|"|/g, "")
+                .replace(/, ?/g, ", ")}
+            </div>
           </div>
         </div>
       </motion.div>
@@ -63,10 +76,17 @@ export function AnswerTile({
   }
 }
 
-export function ShuffleButton({ shuffle }: { shuffle: () => void }) {
+export function ShuffleButton({
+  shuffle,
+  reveal,
+}: {
+  shuffle: () => void;
+  reveal: boolean;
+}) {
   return (
     <div className="flex justify-center">
       <button
+        disabled={reveal}
         onClick={shuffle}
         className="w-32 bg-transparent enabled:outline-black enabled:text-black text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
       >
@@ -78,9 +98,11 @@ export function ShuffleButton({ shuffle }: { shuffle: () => void }) {
 export function CheckButton({
   selected,
   onClick,
+  reveal,
 }: {
   selected: string[];
   onClick: () => void;
+  reveal: boolean;
 }) {
   return (
     <div className="flex justify-center">
@@ -88,7 +110,7 @@ export function CheckButton({
         className={
           "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
         }
-        disabled={selected.length != 5}
+        disabled={selected.length != 5 || reveal}
         onClick={onClick}
       >
         Submit
@@ -106,6 +128,7 @@ export function Tile({
   mistakesLeft,
   wrong,
   resetWrong,
+  reveal,
 }: {
   word: string;
   onClick: () => void;
@@ -115,11 +138,15 @@ export function Tile({
   mistakesLeft: number;
   wrong: boolean;
   resetWrong: () => void;
+  reveal: boolean;
 }) {
   return (
     <motion.div
       key={word}
-      animate={wrong && isClicked ? { x: [-10, 10, -5, 5, 0] } : ""}
+      animate={{
+        ...(wrong && isClicked ? { x: [-10, 10, -5, 5, 0] } : ""),
+        ...(reveal && solved ? { x: [-10, 10, -5, 5, 0] } : ""),
+      }}
       transition={{
         duration: 0.7,
       }}
@@ -152,35 +179,38 @@ export function Board({
   mistakesLeft,
   wrong,
   resetWrong,
+  reveal,
 }: {
   squares: string[];
   selected: string[];
-  onClick: (word: string) => void;
+  onClick: (word: string, index: number) => void;
   reset: () => void;
   solved: string[];
   numSolved: number;
   mistakesLeft: number;
   wrong: boolean;
   resetWrong: () => void;
+  reveal: boolean;
 }) {
-  function handleClick(word: string) {
-    onClick(word);
+  function handleClick(word: string, index: number) {
+    onClick(word, index);
   }
 
   return (
-    <div className="h-full flex justify-center content-center">
+    <div className="h-full flex justify-center content-center text-2xl">
       <ul style={container}>
-        {squares.map((word) => (
+        {squares.map((word, index) => (
           <motion.li key={word} layout transition={spring}>
             <Tile
               word={word}
-              onClick={() => handleClick(word)}
+              onClick={() => handleClick(word, index)}
               isClicked={selected.includes(word)}
               solved={solved.includes(word)}
               numSolved={numSolved}
               mistakesLeft={mistakesLeft}
               wrong={wrong}
               resetWrong={resetWrong}
+              reveal={reveal}
             />
           </motion.li>
         ))}
