@@ -79,16 +79,18 @@ export function AnswerTile({
 export function ShuffleButton({
   shuffle,
   reveal,
+  canShuffle,
 }: {
   shuffle: () => void;
   reveal: boolean;
+  canShuffle: boolean;
 }) {
   return (
     <div className="flex justify-center">
       <button
-        disabled={reveal}
+        disabled={reveal || !canShuffle}
         onClick={shuffle}
-        className="w-32 bg-transparent enabled:outline-white enabled:text-white text-white font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
+        className="w-32 bg-transparent enabled:outline-white enabled:text-white text-white font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-pink-300 disabled:text-gray-300"
       >
         Shuffle
       </button>
@@ -99,18 +101,20 @@ export function CheckButton({
   selected,
   onClick,
   reveal,
+  canSubmit,
 }: {
   selected: string[];
   onClick: () => void;
   reveal: boolean;
+  canSubmit: boolean;
 }) {
   return (
     <div className="flex justify-center">
       <motion.button
         className={
-          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
+          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-pink-300 disabled:text-gray-300"
         }
-        disabled={selected.length != 5 || reveal}
+        disabled={selected.length != 5 || reveal || !canSubmit}
         onClick={onClick}
       >
         Submit
@@ -221,7 +225,7 @@ export function Board({
         style={container}
         variants={variants}
         initial="exit"
-        animate={`${submitted ? "enter" : ""}`} // animate tiles if wrong
+        animate={`${submitted ? "enter" : ""}`} // animate tiles on a guess
         exit="exit"
       >
         {squares.map((word, index) => (

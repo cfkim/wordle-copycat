@@ -42,6 +42,8 @@ export default function Connections() {
   const [orderSelected, setOrderSelected] = useState<number[]>([]);
   const [reveal, setReveal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(true);
+  const [canShuffle, setCanShuffle] = useState(true);
 
   function onClick(word: string, index: number) {
     if (selected.includes(word)) {
@@ -67,6 +69,9 @@ export default function Connections() {
   function resetWrong() {
     setWrong(false);
     setSubmitted(false);
+    if (!canShuffle) {
+      setCanShuffle(true);
+    }
   }
 
   async function endGame() {
@@ -76,6 +81,27 @@ export default function Connections() {
     setMessage("Next Time!");
     setReveal(true);
   }
+
+  useEffect(() => {
+    const set = () => {
+      setCanSubmit(true);
+    };
+
+    if (!canSubmit) {
+      set();
+    }
+  }, [selected]);
+
+  useEffect(() => {
+    console.log(canShuffle);
+    const set = () => {
+      setCanShuffle(true);
+    };
+
+    if (!canShuffle) {
+      set();
+    }
+  }, [submitted]);
 
   useEffect(() => {
     const solve = async () => {
@@ -148,6 +174,9 @@ export default function Connections() {
 
   // checks if its a valid solution
   async function isGroup() {
+    setCanSubmit(false);
+    setCanShuffle(false);
+
     const stringversion = JSON.stringify(selected.sort());
     console.log(stringversion);
     if (solution.has(stringversion)) {
@@ -248,11 +277,16 @@ export default function Connections() {
         <Lives count={mistakesLeft} />
         <div className="flex justify-center">
           <div className="flex flex-row justify-evenly w-1/3">
-            <ShuffleButton shuffle={shuffle} reveal={reveal} />
+            <ShuffleButton
+              shuffle={shuffle}
+              reveal={reveal}
+              canShuffle={canShuffle}
+            />
             <CheckButton
               selected={selected}
               onClick={isGroup}
               reveal={reveal}
+              canSubmit={canSubmit}
             />
           </div>
         </div>
