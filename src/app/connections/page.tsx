@@ -6,7 +6,9 @@ import {
   Lives,
   ShuffleButton,
 } from "@/app/connections/components";
+import { Squares2X2Icon } from "@heroicons/react/24/solid";
 import { AnimatePresence, motion } from "framer-motion";
+import { div } from "framer-motion/client";
 import { useEffect, useState } from "react";
 
 export default function Connections() {
@@ -30,7 +32,7 @@ export default function Connections() {
   ]);
 
   const [selected, setSelected] = useState([""]);
-  const [found, setFound] = useState([""]);
+  const [found, setFound] = useState<string[]>([]);
   const [clicks, setClicks] = useState(1);
   const [solved, setSolved] = useState([""]);
   const [numGroups, setNumGroups] = useState(0);
@@ -44,6 +46,8 @@ export default function Connections() {
   const [submitted, setSubmitted] = useState(false);
   const [canSubmit, setCanSubmit] = useState(true);
   const [canShuffle, setCanShuffle] = useState(true);
+  const [isChecking, setIsChecking] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
 
   function onClick(word: string, index: number) {
     if (selected.includes(word)) {
@@ -69,7 +73,7 @@ export default function Connections() {
   function resetWrong() {
     setWrong(false);
     setSubmitted(false);
-    if (!canShuffle) {
+    if (!canSubmit) {
       setCanShuffle(true);
     }
   }
@@ -92,16 +96,10 @@ export default function Connections() {
     }
   }, [selected]);
 
-  useEffect(() => {
-    console.log(canShuffle);
-    const set = () => {
-      setCanShuffle(true);
-    };
-
-    if (!canShuffle) {
-      set();
-    }
-  }, [submitted]);
+  async function resetIsChecking() {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setIsChecking(false);
+  }
 
   useEffect(() => {
     const solve = async () => {
@@ -127,8 +125,6 @@ export default function Connections() {
           prevSquares.filter((element) => !JSON.parse(words).includes(element))
         );
 
-        console.log(squares);
-
         // add to solved
         for (const word of selected) {
           solved.push(word);
@@ -148,13 +144,16 @@ export default function Connections() {
 
     if (reveal) {
       solve();
-    } else {
-      console.log("not yet");
     }
   }, [reveal]);
 
-  function shuffle() {
+  async function shuffle() {
+    setCanSubmit(false);
     setSquares(shuffleCalc(squares));
+    // make so can't submit during shuffle
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    setCanSubmit(true);
   }
 
   function shuffleCalc([...array]: string[]) {
@@ -175,10 +174,9 @@ export default function Connections() {
   // checks if its a valid solution
   async function isGroup() {
     setCanSubmit(false);
-    setCanShuffle(false);
-
+    setIsChecking(true);
+    console.log("visible beginning: " + isVisible);
     const stringversion = JSON.stringify(selected.sort());
-    console.log(stringversion);
     if (solution.has(stringversion)) {
       setSubmitted(true);
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -223,6 +221,8 @@ export default function Connections() {
             );
 
             if (testArray.length == 1) {
+              // refreshes the pop up
+
               setIsVisible(true);
               setMessage("One Away!");
               break;
@@ -237,61 +237,124 @@ export default function Connections() {
           endGame();
         }
       } else {
+        setIsChecking(false);
         setIsVisible(true);
         setMessage("Already guessed!");
       }
     }
   }
 
+  const variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+        ease: "easeIn",
+        duration: 1,
+      },
+    },
+  };
+
+  const child = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  function startPlay() {
+    setShowBanner(false);
+  }
   return (
-    <main className="flex min-h-screen px-50 py-50 text-2xl font-bold justify-center">
+    <div className="flex justify-center min-h-screen items-center">
+      {/* play banner */}
+      <AnimatePresence>
+        {showBanner && (
+          <motion.div
+            id={"banner"}
+            className="flex absolute w-full flex-col h-full justify-center items-center justify-items-center bg-pink-300 z-50"
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            exit={{
+              opacity: 0,
+              transition: { duration: 0.1, ease: "easeOut" },
+            }}
+          >
+            <motion.div variants={child} className="flex justify-center p-4">
+              <Squares2X2Icon className="w-24" />
+            </motion.div>
+
+            <motion.h1 variants={child} className="text-6xl font-bold p-4">
+              Connections
+            </motion.h1>
+            <motion.h2 variants={child} className="text-2xl p-4">
+              Essentially Reverse Code Names
+            </motion.h2>
+            <motion.div variants={child} className="p-3">
+              <button
+                onClick={startPlay}
+                //href="/connections"
+                className="flex bg-black text-white rounded-full w-50 h-15 text-center items-center justify-center text-xl font-bold"
+              >
+                Play
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         <motion.div
-          className="z-100 top-25 w-45 h-15 font-normal bg-gray-800 rounded flex justify-center items-center absolute"
+          className="z-100 top-30 w-45 h-15 font-normal bg-gray-800 rounded flex justify-center items-center absolute"
           initial={{ opacity: 0 }}
           animate={isVisible ? { opacity: [0, 1, 1, 1, 1, 0] } : ""}
           exit={{ opacity: 0 }}
           onAnimationComplete={() => {
             setIsVisible(false);
+            console.log("false");
           }}
           transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
         >
           <p className="text-white text-lg text-center">{message}</p>
         </motion.div>
       </AnimatePresence>
-      <div className="flex flex-col justify-center content-center">
-        <div className="flex flex-col list-none justify-center">{answers}</div>
-        <Board
-          squares={squares}
-          selected={selected}
-          onClick={onClick}
-          reset={reset}
-          solved={solved}
-          numSolved={numGroups}
-          mistakesLeft={mistakesLeft}
-          wrong={wrong}
-          resetWrong={resetWrong}
-          reveal={reveal}
-          submitted={submitted}
-        />
-        <Lives count={mistakesLeft} />
-        <div className="flex justify-center">
-          <div className="flex flex-row justify-evenly w-1/3">
-            <ShuffleButton
-              shuffle={shuffle}
-              reveal={reveal}
-              canShuffle={canShuffle}
-            />
-            <CheckButton
-              selected={selected}
-              onClick={isGroup}
-              reveal={reveal}
-              canSubmit={canSubmit}
-            />
+      <motion.main className="flex h-full text-2xl font-bold justify-center items-center">
+        <div className="flex flex-col justify-center content-center">
+          <div className="flex flex-col list-none justify-center">
+            {answers}
+          </div>
+          <Board
+            squares={squares}
+            selected={selected}
+            onClick={onClick}
+            reset={reset}
+            solved={solved}
+            numSolved={numGroups}
+            mistakesLeft={mistakesLeft}
+            wrong={wrong}
+            resetWrong={resetWrong}
+            reveal={reveal}
+            submitted={submitted}
+            resetIsChecking={resetIsChecking}
+            isChecking={isChecking}
+          />
+          <Lives count={mistakesLeft} />
+          <div className="flex justify-center">
+            <div className="flex flex-row justify-evenly w-1/3">
+              <ShuffleButton
+                shuffle={shuffle}
+                reveal={reveal}
+                isChecking={isChecking}
+              />
+              <CheckButton
+                selected={selected}
+                onClick={isGroup}
+                reveal={reveal}
+                canSubmit={canSubmit}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </motion.main>
+    </div>
   );
 }
 

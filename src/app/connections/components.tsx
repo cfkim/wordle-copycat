@@ -47,7 +47,6 @@ export function AnswerTile({
   let color = "";
   if (countRef.current != 0) {
     color = colors[countRef.current - 1];
-    console.log(color);
   }
 
   if (categoryName != "") {
@@ -59,7 +58,7 @@ export function AnswerTile({
           duration: 1.6,
           scale: { type: "spring", visualDuration: 0.4, bounce: 0.3 },
         }}
-        className={`flex w-208 h-50 rounded-lg ${color} text-black justify-center`}
+        className={`flex w-208 h-30 rounded-lg ${color} text-black justify-center`}
       >
         <div className="content-center text-2xl">
           <div className="flex flex-col items-center">
@@ -79,18 +78,18 @@ export function AnswerTile({
 export function ShuffleButton({
   shuffle,
   reveal,
-  canShuffle,
+  isChecking,
 }: {
   shuffle: () => void;
   reveal: boolean;
-  canShuffle: boolean;
+  isChecking: boolean;
 }) {
   return (
     <div className="flex justify-center">
       <button
-        disabled={reveal || !canShuffle}
+        disabled={reveal || isChecking}
         onClick={shuffle}
-        className="w-32 bg-transparent enabled:outline-white enabled:text-white text-white font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-pink-300 disabled:text-gray-300"
+        className="w-32 bg-transparent enabled:outline-black enabled:text-black text-white font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
       >
         Shuffle
       </button>
@@ -112,7 +111,7 @@ export function CheckButton({
     <div className="flex justify-center">
       <motion.button
         className={
-          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-pink-300 disabled:text-gray-300"
+          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
         }
         disabled={selected.length != 5 || reveal || !canSubmit}
         onClick={onClick}
@@ -133,6 +132,7 @@ export function Tile({
   wrong,
   resetWrong,
   reveal,
+  isChecking,
 }: {
   word: string;
   onClick: () => void;
@@ -143,6 +143,7 @@ export function Tile({
   wrong: boolean;
   resetWrong: () => void;
   reveal: boolean;
+  isChecking: boolean;
 }) {
   return (
     <motion.div
@@ -165,14 +166,16 @@ export function Tile({
     >
       <button
         onClick={onClick}
-        className={`transition duration 2100 ease-in-out w-50 h-50 rounded-lg ${
+        className={`transition duration 2100 ease-in-out w-50 h-30 rounded-lg ${
           isClicked && !solved && !reveal
             ? "bg-neutral-600 text-white"
             : "bg-neutral-200 text-black"
         } ${isClicked && wrong ? "opacity-80" : ""} ${
-          solved ? "cursor-not-allowed opacity-20" : ""
+          solved
+            ? "cursor-not-allowed opacity-100 bg-neutral-600 text-white"
+            : ""
         } p-4`}
-        disabled={solved}
+        disabled={solved || isChecking}
       >
         <p>{word}</p>
       </button>
@@ -202,6 +205,8 @@ export function Board({
   resetWrong,
   reveal,
   submitted,
+  resetIsChecking,
+  isChecking,
 }: {
   squares: string[];
   selected: string[];
@@ -214,6 +219,8 @@ export function Board({
   resetWrong: () => void;
   reveal: boolean;
   submitted: boolean;
+  resetIsChecking: () => void;
+  isChecking: boolean;
 }) {
   function handleClick(word: string, index: number) {
     onClick(word, index);
@@ -227,6 +234,7 @@ export function Board({
         initial="exit"
         animate={`${submitted ? "enter" : ""}`} // animate tiles on a guess
         exit="exit"
+        onAnimationComplete={resetIsChecking}
       >
         {squares.map((word, index) => (
           <motion.li key={word} layout transition={spring}>
@@ -240,6 +248,7 @@ export function Board({
               wrong={wrong}
               resetWrong={resetWrong}
               reveal={reveal}
+              isChecking={isChecking}
             />
           </motion.li>
         ))}
