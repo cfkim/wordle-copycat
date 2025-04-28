@@ -39,7 +39,6 @@ export default function Connections() {
   const [mistakesLeft, setMistakesLeft] = useState(4);
   const [guessed, setGuessed] = useState([""]);
   const [wrong, setWrong] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [orderSelected, setOrderSelected] = useState<number[]>([]);
   const [reveal, setReveal] = useState(false);
@@ -49,7 +48,7 @@ export default function Connections() {
   const [isChecking, setIsChecking] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   // const [time, setTime] = useState(0);
-  //const [popkey, setPopkey] = useState(0);
+  const [popkey, setPopkey] = useState(0);
 
   function onClick(word: string, index: number) {
     if (selected.includes(word)) {
@@ -83,7 +82,8 @@ export default function Connections() {
   async function endGame() {
     setSelected([""]);
     setWrong(false);
-    setIsVisible(true);
+    let now = new Date();
+    setPopkey(now.getTime());
     setMessage("Next Time!");
     setReveal(true);
   }
@@ -177,7 +177,6 @@ export default function Connections() {
   async function isGroup() {
     setCanSubmit(false);
     setIsChecking(true);
-    console.log("visible beginning: " + isVisible);
     const stringversion = JSON.stringify(selected.sort());
     if (solution.has(stringversion)) {
       setSubmitted(true);
@@ -223,11 +222,9 @@ export default function Connections() {
             );
 
             if (testArray.length == 1) {
-              // refreshes the pop up
-              // let now = new Date();
-              // setTime(now.getTime());
+              let now = new Date();
+              setPopkey(now.getTime());
 
-              setIsVisible(true);
               setMessage("One Away!");
               break;
             }
@@ -241,11 +238,10 @@ export default function Connections() {
           endGame();
         }
       } else {
-        // refreshes the pop up
-        // let now = new Date();
-        // setTime(now.getTime());
+        let now = new Date();
+        setPopkey(now.getTime());
         setIsChecking(false);
-        setIsVisible(true);
+
         setMessage("Already guessed!");
       }
     }
@@ -310,15 +306,12 @@ export default function Connections() {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {isVisible && (
+        {popkey && (
           <motion.div
+            key={popkey}
             className="z-100 top-30 w-45 h-15 font-normal bg-gray-800 rounded flex justify-center items-center absolute"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 1, 1, 1, 0] }}
-            exit={{ opacity: 0 }}
-            onAnimationComplete={() => {
-              setIsVisible(false);
-            }}
+            animate={{ opacity: [1, 1, 1, 0.8, 0.7, 0] }}
             transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
           >
             <p className="text-white text-lg text-center">{message}</p>

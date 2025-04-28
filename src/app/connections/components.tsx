@@ -62,7 +62,7 @@ export function AnswerTile({
       >
         <div className="content-center text-2xl">
           <div className="flex flex-col items-center">
-            <div className="pb-6">{categoryName}</div>
+            <div className="pb-3">{categoryName}</div>
             <div className="font-normal">
               {JSON.stringify(words.slice(1))
                 .replace(/\[|\]|"|/g, "")
