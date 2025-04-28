@@ -48,6 +48,8 @@ export default function Connections() {
   const [canShuffle, setCanShuffle] = useState(true);
   const [isChecking, setIsChecking] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
+  // const [time, setTime] = useState(0);
+  //const [popkey, setPopkey] = useState(0);
 
   function onClick(word: string, index: number) {
     if (selected.includes(word)) {
@@ -222,6 +224,8 @@ export default function Connections() {
 
             if (testArray.length == 1) {
               // refreshes the pop up
+              // let now = new Date();
+              // setTime(now.getTime());
 
               setIsVisible(true);
               setMessage("One Away!");
@@ -237,6 +241,9 @@ export default function Connections() {
           endGame();
         }
       } else {
+        // refreshes the pop up
+        // let now = new Date();
+        // setTime(now.getTime());
         setIsChecking(false);
         setIsVisible(true);
         setMessage("Already guessed!");
@@ -263,6 +270,7 @@ export default function Connections() {
   function startPlay() {
     setShowBanner(false);
   }
+
   return (
     <div className="flex justify-center min-h-screen items-center">
       {/* play banner */}
@@ -302,19 +310,20 @@ export default function Connections() {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        <motion.div
-          className="z-100 top-30 w-45 h-15 font-normal bg-gray-800 rounded flex justify-center items-center absolute"
-          initial={{ opacity: 0 }}
-          animate={isVisible ? { opacity: [0, 1, 1, 1, 1, 0] } : ""}
-          exit={{ opacity: 0 }}
-          onAnimationComplete={() => {
-            setIsVisible(false);
-            console.log("false");
-          }}
-          transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
-        >
-          <p className="text-white text-lg text-center">{message}</p>
-        </motion.div>
+        {isVisible && (
+          <motion.div
+            className="z-100 top-30 w-45 h-15 font-normal bg-gray-800 rounded flex justify-center items-center absolute"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 1, 1, 1, 0] }}
+            exit={{ opacity: 0 }}
+            onAnimationComplete={() => {
+              setIsVisible(false);
+            }}
+            transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
+          >
+            <p className="text-white text-lg text-center">{message}</p>
+          </motion.div>
+        )}
       </AnimatePresence>
       <motion.main className="flex h-full text-2xl font-bold justify-center items-center">
         <div className="flex flex-col justify-center content-center">
