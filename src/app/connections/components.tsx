@@ -8,7 +8,7 @@ const colors = ["bg-yellow-100", "bg-red-100", "bg-teal-100", "bg-purple-100"];
 
 export function Lives({ count }: { count: number }) {
   return (
-    <motion.div className="flex justify-center py-7" animate={{}}>
+    <motion.div className="flex justify-center pb-7" animate={{}}>
       <div className="flex flex-row w-2/3 justify-center">
         Mistakes Remaining:
         <div className="flex justify-left w-1/5 px-5">
