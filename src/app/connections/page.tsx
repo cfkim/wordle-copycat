@@ -163,7 +163,7 @@ export default function Connections() {
   }
   const answers = found.map((answer, index) => {
     return (
-      <li className="flex justify-center pb-2 items-center" key={index}>
+      <li className="flex justify-center pb-2.5 items-center" key={index}>
         <AnswerTile
           categoryName={answer}
           words={JSON.parse(matches.get(answer) || "[]") || ""}
@@ -326,38 +326,42 @@ export default function Connections() {
       </AnimatePresence>
       <motion.main className="flex h-full text-2xl font-bold justify-center items-center">
         <div className="flex flex-col justify-center content-center">
-          <div className="flex flex-col list-none justify-center">
-            {answers}
+          <div>
+            <div className="flex flex-col list-none justify-center">
+              {answers}
+            </div>
+            <Board
+              squares={squares}
+              selected={selected}
+              onClick={onClick}
+              reset={reset}
+              solved={solved}
+              numSolved={numGroups}
+              mistakesLeft={mistakesLeft}
+              wrong={wrong}
+              resetWrong={resetWrong}
+              reveal={reveal}
+              submitted={submitted}
+              resetIsChecking={resetIsChecking}
+              isChecking={isChecking}
+            />
           </div>
-          <Board
-            squares={squares}
-            selected={selected}
-            onClick={onClick}
-            reset={reset}
-            solved={solved}
-            numSolved={numGroups}
-            mistakesLeft={mistakesLeft}
-            wrong={wrong}
-            resetWrong={resetWrong}
-            reveal={reveal}
-            submitted={submitted}
-            resetIsChecking={resetIsChecking}
-            isChecking={isChecking}
-          />
-          <Lives count={mistakesLeft} />
-          <div className="flex justify-center">
-            <div className="flex flex-row justify-evenly w-1/3">
-              <ShuffleButton
-                shuffle={shuffle}
-                reveal={reveal}
-                isChecking={isChecking}
-              />
-              <CheckButton
-                selected={selected}
-                onClick={isGroup}
-                reveal={reveal}
-                canSubmit={canSubmit}
-              />
+          <div className={`${numGroups == 4 ? "pt-4.5" : "pt-7"}`}>
+            <Lives count={mistakesLeft} />
+            <div className="flex justify-center">
+              <div className="flex flex-row justify-evenly w-1/3">
+                <ShuffleButton
+                  shuffle={shuffle}
+                  reveal={reveal}
+                  isChecking={isChecking}
+                />
+                <CheckButton
+                  selected={selected}
+                  onClick={isGroup}
+                  reveal={reveal}
+                  canSubmit={canSubmit}
+                />
+              </div>
             </div>
           </div>
         </div>
