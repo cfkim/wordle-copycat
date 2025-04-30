@@ -111,7 +111,7 @@ export function CheckButton({
     <div className="flex justify-center">
       <motion.button
         className={
-          "text-lg font-normal w-25 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-neutral-600 dark:disabled:text-neutral-600 disabled:outline-neutral-300 disabled:text-neutral-300"
+          "text-lg font-normal w-25 bg-transparent dark:enabled:bg-white dark:enabled:text-black enabled:bg-black enabled:text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-neutral-600 dark:disabled:text-neutral-600 disabled:outline-neutral-300 disabled:text-neutral-300"
         }
         disabled={selected.length != 5 || reveal || !canSubmit}
         onClick={onClick}
