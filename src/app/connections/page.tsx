@@ -315,12 +315,14 @@ export default function Connections() {
         {popkey && (
           <motion.div
             key={popkey}
-            className="z-100 top-30 w-45 h-15 font-normal bg-gray-800 rounded flex justify-center items-center absolute"
+            className="z-100 top-30 w-45 h-15 font-normal bg-black rounded flex justify-center items-center absolute bg-black dark:bg-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: [1, 1, 1, 0.8, 0.7, 0] }}
             transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
           >
-            <p className="text-white text-lg text-center">{message}</p>
+            <p className="font-bold text-white dark:text-black text-lg text-center">
+              {message}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
