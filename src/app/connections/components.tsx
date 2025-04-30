@@ -58,11 +58,11 @@ export function AnswerTile({
           duration: 1.6,
           scale: { type: "spring", visualDuration: 0.4, bounce: 0.3 },
         }}
-        className={`flex w-208 h-30 rounded-lg ${color} text-black justify-center`}
+        className={`flex w-166.5 h-23 rounded-lg ${color} text-black justify-center`}
       >
-        <div className="content-center text-2xl">
+        <div className="content-center text-xl">
           <div className="flex flex-col items-center">
-            <div className="pb-3">{categoryName}</div>
+            <div>{categoryName}</div>
             <div className="font-normal">
               {JSON.stringify(words.slice(1))
                 .replace(/\[|\]|"|/g, "")
@@ -166,7 +166,7 @@ export function Tile({
     >
       <button
         onClick={onClick}
-        className={`transition duration 2100 ease-in-out w-50 h-30 rounded-lg ${
+        className={`transition duration 2100 ease-in-out w-40 h-23 rounded-lg ${
           isClicked && !solved && !reveal
             ? "bg-neutral-600 text-white"
             : "bg-neutral-200 text-black"
@@ -227,7 +227,7 @@ export function Board({
   }
 
   return (
-    <div className="h-full flex justify-center content-center text-2xl">
+    <div className="h-full flex justify-center content-center text-lg">
       <motion.ul
         style={container}
         variants={variants}
@@ -271,7 +271,7 @@ const container: React.CSSProperties = {
   display: "flex",
   flexWrap: "wrap",
   gap: 10,
-  width: 1000,
+  width: 800,
   flexDirection: "row",
   justifyContent: "center",
   alignItems: "center",

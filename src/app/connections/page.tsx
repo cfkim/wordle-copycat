@@ -274,7 +274,7 @@ export default function Connections() {
         {showBanner && (
           <motion.div
             id={"banner"}
-            className="flex absolute w-full flex-col h-full justify-center items-center justify-items-center bg-pink-300 z-50"
+            className="flex absolute w-full flex-col h-full justify-center items-center justify-items-center bg-[#D0F0C0] z-50"
             variants={variants}
             initial="hidden"
             animate="visible"
@@ -312,7 +312,7 @@ export default function Connections() {
         {popkey && (
           <motion.div
             key={popkey}
-            className="z-100 top-15 w-35 h-10 font-normal bg-black rounded flex justify-center items-center absolute bg-black dark:bg-white"
+            className="z-100 top-30 w-35 h-10 font-normal bg-black rounded flex justify-center items-center absolute bg-black dark:bg-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: [1, 1, 1, 0.8, 0.7, 0] }}
             transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
@@ -348,7 +348,7 @@ export default function Connections() {
           <div className={`${numGroups == 4 ? "pt-4.5" : "pt-7"}`}>
             <Lives count={mistakesLeft} />
             <div className="flex justify-center">
-              <div className="flex flex-row justify-evenly w-1/4">
+              <div className="flex flex-row justify-evenly w-1/3">
                 <ShuffleButton
                   shuffle={shuffle}
                   reveal={reveal}
