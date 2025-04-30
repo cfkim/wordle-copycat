@@ -89,7 +89,7 @@ export function ShuffleButton({
       <button
         disabled={reveal || isChecking}
         onClick={shuffle}
-        className="w-32 bg-transparent enabled:outline-black enabled:text-black text-white font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
+        className="w-32 bg-transparent dark:enabled:outline-white dark:enabled:text-white enabled:outline-black enabled:text-black text-white font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-gray-600 dark:disabled:text-gray-600 disabled:outline-gray-300 disabled:text-gray-300"
       >
         Shuffle
       </button>
@@ -111,7 +111,7 @@ export function CheckButton({
     <div className="flex justify-center">
       <motion.button
         className={
-          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] disabled:outline-gray-300 disabled:text-gray-300"
+          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-gray-600 dark:disabled:text-gray-600 disabled:outline-gray-300 disabled:text-gray-300"
         }
         disabled={selected.length != 5 || reveal || !canSubmit}
         onClick={onClick}

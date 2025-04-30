@@ -284,13 +284,19 @@ export default function Connections() {
             }}
           >
             <motion.div variants={child} className="flex justify-center p-4">
-              <Squares2X2Icon className="w-24" />
+              <Squares2X2Icon className="w-24 text-black" />
             </motion.div>
 
-            <motion.h1 variants={child} className="text-6xl font-bold p-4">
+            <motion.h1
+              variants={child}
+              className="text-6xl font-bold p-4 dark:text-black"
+            >
               Connections
             </motion.h1>
-            <motion.h2 variants={child} className="text-2xl p-4">
+            <motion.h2
+              variants={child}
+              className="text-2xl p-4 dark:text-black"
+            >
               Essentially Reverse Code Names
             </motion.h2>
             <motion.div variants={child} className="p-3">
