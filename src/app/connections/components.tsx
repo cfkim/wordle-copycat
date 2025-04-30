@@ -8,8 +8,8 @@ const colors = ["bg-yellow-100", "bg-red-100", "bg-teal-100", "bg-purple-100"];
 
 export function Lives({ count }: { count: number }) {
   return (
-    <motion.div className="flex justify-center pb-7" animate={{}}>
-      <div className="flex flex-row w-2/3 justify-center">
+    <motion.div className="flex justify-center pb-5" animate={{}}>
+      <div className="flex flex-row w-2/3 justify-center text-lg font-normal">
         Mistakes Remaining:
         <div className="flex justify-left w-1/5 px-5">
           <AnimatePresence>
@@ -25,7 +25,7 @@ export function Lives({ count }: { count: number }) {
                 animate={{ transform: "scale(1)", opacity: 1 }}
                 exit={{ transform: "scale(0.8)", opacity: 0 }}
               >
-                <div className="w-6 h-6 bg-neutral-600 dark:bg-neutral-50 rounded-full"></div>
+                <div className="w-4 h-4 bg-neutral-600 dark:bg-neutral-50 rounded-full"></div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -89,7 +89,7 @@ export function ShuffleButton({
       <button
         disabled={reveal || isChecking}
         onClick={shuffle}
-        className="w-32 bg-transparent dark:enabled:outline-white dark:enabled:text-white enabled:outline-black enabled:text-black text-white font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-neutral-600 dark:disabled:text-neutral-600 disabled:outline-neutral-300 disabled:text-neutral-300"
+        className="text-lg font-normal w-25 bg-transparent dark:enabled:outline-white dark:enabled:text-white enabled:outline-black enabled:text-black text-white font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-neutral-600 dark:disabled:text-neutral-600 disabled:outline-neutral-300 disabled:text-neutral-300"
       >
         Shuffle
       </button>
@@ -111,7 +111,7 @@ export function CheckButton({
     <div className="flex justify-center">
       <motion.button
         className={
-          "w-32 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-neutral-600 dark:disabled:text-neutral-600 disabled:outline-neutral-300 disabled:text-neutral-300"
+          "text-lg font-normal w-25 bg-transparent enabled:bg-black enabled: text-white text-black font-bold py-2 px-4 rounded-full outline-[1.5] dark:disabled:outline-neutral-600 dark:disabled:text-neutral-600 disabled:outline-neutral-300 disabled:text-neutral-300"
         }
         disabled={selected.length != 5 || reveal || !canSubmit}
         onClick={onClick}

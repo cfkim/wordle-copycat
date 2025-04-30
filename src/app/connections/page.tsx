@@ -283,7 +283,7 @@ export default function Connections() {
               transition: { duration: 0.1, ease: "easeOut" },
             }}
           >
-            <motion.div variants={child} className="flex justify-center p-4">
+            <motion.div variants={child} className="flex justify-center ">
               <Squares2X2Icon className="w-24 text-black" />
             </motion.div>
 
@@ -293,17 +293,14 @@ export default function Connections() {
             >
               Connections
             </motion.h1>
-            <motion.h2
-              variants={child}
-              className="text-2xl p-4 dark:text-black"
-            >
+            <motion.h2 variants={child} className="text-xl p-4 dark:text-black">
               Essentially Reverse Code Names
             </motion.h2>
             <motion.div variants={child} className="p-3">
               <button
                 onClick={startPlay}
                 //href="/connections"
-                className="flex bg-black text-white rounded-full w-50 h-15 text-center items-center justify-center text-xl font-bold"
+                className="flex bg-black text-white rounded-full w-40 h-12 text-center items-center justify-center text-lg font-bold"
               >
                 Play
               </button>
@@ -315,12 +312,12 @@ export default function Connections() {
         {popkey && (
           <motion.div
             key={popkey}
-            className="z-100 top-30 w-45 h-15 font-normal bg-black rounded flex justify-center items-center absolute bg-black dark:bg-white"
+            className="z-100 top-15 w-35 h-10 font-normal bg-black rounded flex justify-center items-center absolute bg-black dark:bg-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: [1, 1, 1, 0.8, 0.7, 0] }}
             transition={{ duration: 3, times: [0, 0.1, 0.5, 0.7, 0.8, 1] }}
           >
-            <p className="font-bold text-white dark:text-black text-lg text-center">
+            <p className="font-bold text-white dark:text-black text-sm text-center">
               {message}
             </p>
           </motion.div>
@@ -351,7 +348,7 @@ export default function Connections() {
           <div className={`${numGroups == 4 ? "pt-4.5" : "pt-7"}`}>
             <Lives count={mistakesLeft} />
             <div className="flex justify-center">
-              <div className="flex flex-row justify-evenly w-1/3">
+              <div className="flex flex-row justify-evenly w-1/4">
                 <ShuffleButton
                   shuffle={shuffle}
                   reveal={reveal}
