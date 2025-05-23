@@ -24,22 +24,22 @@ typescript@5.8.3
 
 
 ## 🛠️ Build/Deploy Instructions
-1. Prerequisites
+### 1. Prerequisites
 Node.js version **18.17.0** or higher, **OR 20.3.0** or higher, **OR any version 21+**
-2. Installation
+### 2. Installation
 ```bash
 npm install
 # or
 yarn install
 ```
-3. Build
+### 3. Build
 ```bash
 npm run build
 ```
-4. Start/Run the project locally
+### 4. Start/Run the project locally
 ```bash
 npm start
 npm run dev
 ```
-5. Deployment
+### 5. Deployment
 Create a Vercel Account, if needed, and connect your GitHub account to it. You can deploy the app from choosing from one of your existing repositories. 
