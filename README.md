@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 💬 Purpose
+The purpose of this app is to simulate the Connections game from the New York Times. It provides the base for adding improvements to the game such as a guess board that tracks your guesses or allowing people to make their own solutions.
 
-## Getting Started
+## ⚙️ Major Functions
+- Displays an interactive board of various words
+- Users can choose tiles to make guesses for the groups
 
-First, run the development server:
+## 📦 Dependencies
 
+### Dependencies
+@heroicons/react@2.2.0
+framer-motion@12.7.4
+next@15.3.1
+react@19.1.0
+react-dom@19.1.0
+tailwindcss@4.1.4
+
+### Dev Dependencies
+@tailwindcss/postcss@4.1.4
+@types/node@20.17.30
+@types/react@19.1.2
+@types/react-dom@19.1.2
+typescript@5.8.3
+
+
+## 🛠️ Build/Deploy Instructions
+1. Prerequisites
+Node.js version **18.17.0** or higher, **OR 20.3.0** or higher, **OR any version 21+**
+2. Installation
 ```bash
-npm run dev
+npm install
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn install
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Build
+```bash
+npm run build
+```
+4. Start/Run the project locally
+```bash
+npm start
+npm run dev
+```
+5. Deployment
+Create a Vercel Account, if needed, and connect your GitHub account to it. You can deploy the app from choosing from one of your existing repositories. 
