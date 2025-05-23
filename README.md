@@ -8,19 +8,19 @@ The purpose of this app is to simulate the Connections game from the New York Ti
 ## 📦 Dependencies
 
 ### Dependencies
-@heroicons/react@2.2.0
-framer-motion@12.7.4
-next@15.3.1
-react@19.1.0
-react-dom@19.1.0
-tailwindcss@4.1.4
+@heroicons/react@2.2.0  
+framer-motion@12.7.4  
+next@15.3.1  
+react@19.1.0  
+react-dom@19.1.0  
+tailwindcss@4.1.4  
 
 ### Dev Dependencies
-@tailwindcss/postcss@4.1.4
-@types/node@20.17.30
-@types/react@19.1.2
-@types/react-dom@19.1.2
-typescript@5.8.3
+@tailwindcss/postcss@4.1.4  
+@types/node@20.17.30  
+@types/react@19.1.2  
+@types/react-dom@19.1.2  
+typescript@5.8.3  
 
 
 ## 🛠️ Build/Deploy Instructions
